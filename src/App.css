@@ -1,0 +1,15 @@
+.App-header {
+  background-color: #3c89b6;
+  min-height: 60px;
+  max-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #e9e6e5;
+}
+.App-body{
+  background-color: #c2c4c5;
+}
+.App-link {
+  color: #e74f7d;
+}
