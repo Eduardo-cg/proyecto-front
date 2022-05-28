@@ -67,21 +67,19 @@ class Login extends React.Component {
     render() {
         if (this.state.Usuario !== null) {
             return (
-                <div className="bg">
-                    <br />
+                <div>
                     <Container>
-                        <Row>
-                            <Col xs={3} className="p-3 m-auto shadow rounded">
-                                <h1 style={{ textAlign: "center" }}>¡Bienvenido!</h1>
-                                <br />
+                        <br />
+                        <Row >
+                            <Col xs={12} md={6} className="p-3 m-auto shadow rounded">
                                 <center>
+                                    <h1>¡Bienvenido!</h1>
+                                    <br />
                                     <Image
                                         className='rounded-circle'
                                         src={perfil} height="70px"
-                                        rounded={true}>
-                                    </Image>
+                                        rounded={true} />
                                 </center>
-
                             </Col>
                         </Row>
                     </Container>
@@ -90,11 +88,11 @@ class Login extends React.Component {
         } else {
 
             return (
-                <div className="bg">
-                    <br />
+                <div>
                     <Container>
+                        <br />
                         <Row>
-                            <Col xs={3} className="p-3 m-auto  shadow rounded">
+                            <Col xs={12} md={6} className="p-3 m-auto  shadow rounded">
                                 <Form>
                                     <FloatingLabel controlId="floatingInput" label="Usuario" className="mb-3">
                                         <Form.Control size='lg'

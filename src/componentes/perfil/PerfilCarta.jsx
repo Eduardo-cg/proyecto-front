@@ -57,14 +57,49 @@ class PerfilCarta extends React.Component {
     }
 
     render() {
-        if (localStorage.getItem('id') !== 'null' && localStorage.getItem('id') !== null) {
-            if (this.state.editar === false) {
-                return (
-                    <div>
-                        <br />
-                        <Container>
-                            <Row>
-                                <Col xs={6} md={4} className="p-3 m-auto shadow rounded">
+
+        if (this.state.editar === false) {
+            return (
+                <div>
+                    <br />
+                    <Container>
+                        <Row>
+                            <Col xs={12} className="m-auto">
+                                <Card >
+                                    <Card.Body>
+                                        <Card.Title>
+                                            Usuario: {this.state.user}
+                                            <p />
+                                            Email: {this.state.email}
+                                            <p />
+                                            Pass: {this.state.pass}
+                                            <p />
+                                            Nombre: {this.state.name}
+                                        </Card.Title>
+                                        <br />
+                                        <Button size='lg' variant="outline-danger" type="button" onClick={this.logout} >
+                                            Logout
+                                        </Button>
+                                        &nbsp;
+                                        <Button size='lg' variant="outline-primary" type="button" onClick={this.changeEditar}>
+                                            Editar
+                                        </Button>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        </Row>
+                    </Container>
+                </div>
+            )
+
+        } else {
+            return (
+                <div>
+                    <br />
+                    <Container>
+                        <Row>
+                            <Col xs={12} className="m-auto">
+                                <CardGroup>
                                     <Card >
                                         <Card.Body>
                                             <Card.Title>
@@ -77,120 +112,54 @@ class PerfilCarta extends React.Component {
                                                 Nombre: {this.state.name}
                                             </Card.Title>
                                             <br />
-                                            <Button size='lg' variant="outline-danger" type="button" onClick={this.logout} >
-                                                Logout
-                                            </Button>
-                                            &nbsp;
-                                            <Button size='lg' variant="outline-primary" type="button" onClick={this.changeEditar}>
-                                                Editar
-                                            </Button>
+                                            <div>
+                                                <Button size='lg' variant="outline-danger" type="button" onClick={this.logout} >
+                                                    Logout
+                                                </Button>
+                                                &nbsp;
+                                                <Button size='lg' variant="outline-primary" type="button" onClick={this.changeEditar}>
+                                                    Dejar de Editar
+                                                </Button>
+                                            </div>
                                         </Card.Body>
                                     </Card>
-                                </Col>
-                            </Row>
-                        </Container>
-                    </div>
-                )
 
-            } else {
-                return (
-                    <div className="bg">
-                        <br />
-                        <Container>
-                            <Row>
-                                <Col xs={12} md={8} className="p-3 m-auto shadow rounded">
-                                    <CardGroup>
-                                        <Card >
-                                            <Card.Body>
-                                                <Card.Title>
-                                                    Usuario: {this.state.user}
-                                                    <p />
-                                                    Email: {this.state.email}
-                                                    <p />
-                                                    Pass: {this.state.pass}
-                                                    <p />
-                                                    Nombre: {this.state.name}
-                                                </Card.Title>
-                                                <br />
-                                                <div>
-                                                    <Button size='lg' variant="outline-danger" type="button" onClick={this.logout} >
-                                                        Logout
-                                                    </Button>
-                                                    &nbsp;
-                                                    <Button size='lg' variant="outline-primary" type="button" onClick={this.changeEditar}>
-                                                        Dejar de Editar
-                                                    </Button>
-                                                </div>
+                                    <Card>
+                                        <Card.Body>
+                                            <Form>
+                                                <Form.Label>Usuario:</Form.Label>
+                                                <Form.Control size='lg'
+                                                    type="text"
+                                                    defaultValue={this.state.user}
+                                                    ref={this.inputUser} />
 
+                                                <Form.Label>Email:</Form.Label>
+                                                <Form.Control size='lg'
+                                                    type="email"
+                                                    defaultValue={this.state.email}
+                                                    ref={this.inputEmail} />
 
-                                            </Card.Body>
-                                        </Card>
+                                                <Form.Label>Contraseña:</Form.Label>
+                                                <Form.Control size='lg'
+                                                    type="password"
+                                                    defaultValue={this.state.pass}
+                                                    ref={this.inputPassword} />
 
-                                        <Card>
-                                            <Card.Body>
-                                                <Form>
-                                                    <Form.Label>Usuario:</Form.Label>
-                                                    <Form.Control size='lg'
-                                                        type="text"
-                                                        defaultValue={this.state.user}
-                                                        ref={this.inputUser} />
-
-                                                    <Form.Label>Email:</Form.Label>
-                                                    <Form.Control size='lg'
-                                                        type="email"
-                                                        defaultValue={this.state.email}
-                                                        ref={this.inputEmail} />
-
-                                                    <Form.Label>Contraseña:</Form.Label>
-                                                    <Form.Control size='lg'
-                                                        type="password"
-                                                        defaultValue={this.state.pass}
-                                                        ref={this.inputPassword} />
-
-                                                    <Form.Label>Nombre:</Form.Label>
-                                                    <Form.Control size='lg'
-                                                        type="text"
-                                                        defaultValue={this.state.name}
-                                                        ref={this.inputNombre} />
-                                                </Form>
-                                                <br />
-                                                <div className="d-grid gap-2">
-                                                    <Button size='lg' variant="primary" type="button" onClick={this.guardarCambios}>
-                                                        Guardar Cambios
-                                                    </Button>
-                                                </div>
-                                            </Card.Body>
-                                        </Card>
-                                    </CardGroup>
-                                </Col>
-                            </Row>
-                        </Container>
-                    </div>
-                );
-            }
-        } else {
-            return (
-
-                <div className="p-3">
-                    <Container>
-                        <br />
-                        <Row>
-                            <Col xs={12} md={8} className="p-3 m-auto shadow rounded">
-                                <div className="d-grid gap-2">
-                                    <Button variant="outline-primary" size="lg" as={Link} to="/login">Iniciar Sesion</Button>
-                                </div>
-                                <br />
-                                <div className="me-auto" text-align="center">
-
-                                    <h1 style={{ textAlign: "center" }}>
-                                        o
-                                    </h1>
-
-                                </div>
-                                <br />
-                                <div className="d-grid gap-2">
-                                    <Button variant="outline-secondary" size="lg" as={Link} to="/registro">Registrarse</Button>
-                                </div>
+                                                <Form.Label>Nombre:</Form.Label>
+                                                <Form.Control size='lg'
+                                                    type="text"
+                                                    defaultValue={this.state.name}
+                                                    ref={this.inputNombre} />
+                                            </Form>
+                                            <br />
+                                            <div className="d-grid">
+                                                <Button size='lg' variant="primary" type="button" onClick={this.guardarCambios}>
+                                                    Guardar Cambios
+                                                </Button>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+                                </CardGroup>
                             </Col>
                         </Row>
                     </Container>
@@ -199,4 +168,5 @@ class PerfilCarta extends React.Component {
         }
     }
 }
+
 export default PerfilCarta;

@@ -20,24 +20,23 @@ class Pedidos extends React.Component {
 
     render() {
         return (
-            <div className="p-3 m-auto shadow rounded">
+            <div>
                 <br />
                 <Container>
                     <Row>
                         <Col xs={8} md={10} className="p-3 m-auto">
                             <Form.Select aria-label="Default select example" ref={this.selectValue}>
-                                <option></option>
+                                <option/>
                                 {PedidosEj.map((item) => {
                                     return <option key={uuid()} value={item.id} >
                                         Pedido: {item.id}/{item.fecha}</option>
                                 })}
                             </Form.Select>
                         </Col>
-                        <Col className="p-3 m-auto">
+                        <Col xs={4} md={2} className="p-3 m-auto">
                             <center>
                                 <Button size="lg" variant="outline-primary" onClick={this.actualizar}>Seleccionar</Button>
                             </center>
-
                         </Col>
                     </Row>
                     <Row>
@@ -68,7 +67,6 @@ class Pedidos extends React.Component {
                         </Col>
                     </Row>
                 </Container>
-                <br />
             </div>
         );
     }

@@ -2,7 +2,6 @@ import Inicio from "../componentes/inicio/Incio";
 import Login from "../componentes/login_registro/Login";
 import Perfil from "../componentes/perfil/Perfil";
 import Registro from "../componentes/login_registro/Registro";
-import Restaurante from "../componentes/restaurante/Restaurante";
 import Pedido from "../componentes/restaurante/Pedido";
 
 export const MenuNav = [
@@ -32,12 +31,6 @@ export const MenuNav = [
   },
   {
     id: 4,
-    path: '/restaurante',
-    title: 'Restaurante',
-    component: Restaurante,
-  },
-  {
-    id: 5,
     path: '/pedido',
     title: 'Pedido',
     component: Pedido,

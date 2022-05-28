@@ -62,9 +62,10 @@ class PagoInfoCarta extends React.Component {
             return (
                 <div>
                     <br />
+
                     <Container>
                         <Row>
-                            <Col xs={6} md={4} className="p-3 m-auto shadow rounded">
+                            <Col xs={12} className="m-auto">
                                 <Card >
                                     <Card.Body>
                                         <Card.Title>
@@ -98,7 +99,7 @@ class PagoInfoCarta extends React.Component {
                     <br />
                     <Container>
                         <Row>
-                            <Col xs={12} md={8} className="p-3 m-auto shadow rounded">
+                            <Col xs={12} className="m-auto">
                                 <CardGroup>
                                     <Card >
                                         <Card.Body>

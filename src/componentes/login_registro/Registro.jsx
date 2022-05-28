@@ -35,9 +35,9 @@ class Registro extends React.Component {
     render() {
 
         return (
-            <div className="p-3">
+            <div>
+                <br />
                 <Container>
-                    <br />
                     <Row>
                         <Col xs={6} className="p-3 m-auto shadow rounded">
                             <Form>

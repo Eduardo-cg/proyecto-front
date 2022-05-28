@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Navbar, Container, Nav, Offcanvas, NavDropdown, Image } from 'react-bootstrap';
-import { MenuNav } from '../data/MenuNav';
 import { Restaurantes } from '../data/Restaurantes';
 import uuid from 'react-uuid';
 import './StyleMenu.css';
@@ -47,7 +46,7 @@ class MenuNavBar extends React.Component {
                 </Nav.Link>
                 <NavDropdown title="Restaurantes" id="basic-nav-dropdown">
                   {Restaurantes.map((item) => {
-                    return <NavDropdown.Item key={uuid()} as={Link} to="/restaurante" onClick={() => (localStorage.setItem('restaurante', item.id))}>
+                    return <NavDropdown.Item key={uuid()} as={Link} to={"/restaurante/" + item.id}>
                       {item.name}</NavDropdown.Item>
                   })}
                 </NavDropdown>

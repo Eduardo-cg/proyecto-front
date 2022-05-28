@@ -1,7 +1,6 @@
 import React from "react";
 import { Table, Container, Row, Button, Col, Modal } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import { PedidosEj } from "../../data/PedidosEj";
+
 
 class Pedido extends React.Component {
     constructor(props) {
@@ -11,15 +10,34 @@ class Pedido extends React.Component {
         this.pagar = this.pagar.bind(this);
     }
 
-
     componentDidMount() {
         let p = JSON.parse(localStorage.getItem("pedidos"));
         this.setState({ pe: p });
         this.pedidos = p;
     }
 
+    pagar() {
+        this.setState({ setShow: true, boton: true })
+    }
+
+    quitar(x, y) {
+        console.log(x + "" + y);
+
+        if (this.pedidos[x].lineas.length == 1) {
+            this.pedidos.splice(x, 1);
+        } else {
+            this.pedidos[x].lineas.splice(y, 1);
+        }
+
+        this.setState({ pe: this.pedidos });
+        localStorage.removeItem("pedidos");
+        localStorage.setItem("pedidos", JSON.stringify(this.pedidos));
+    }
+
+
+
     renderProducts() {
-        return this.pedidos.map(item => {
+        return this.pedidos.map((item, x) => {
             return (
                 <Row>
                     <Col className="p-3 m-auto">
@@ -35,12 +53,17 @@ class Pedido extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {item.lineas.map((l) => {
+                                {item.lineas.map((l, y) => {
                                     return (
                                         <tr>
                                             <td>{l.nombre}</td>
                                             <td>{l.precio}</td>
                                             <td>{l.unidades}</td>
+                                            <td className="d-grid gap-2">
+                                                <Button variant="outline-danger" onClick={() => this.quitar(x, y)}>
+                                                    Quitar
+                                                </Button>
+                                            </td>
                                         </tr>
                                     );
                                 })}
@@ -52,17 +75,13 @@ class Pedido extends React.Component {
         })
     }
 
-    pagar() {
-        this.setState({ setShow: true, boton: true })
-    }
-
     render() {
 
-        if (localStorage.getItem("pedidos") == null) {
+        if (localStorage.getItem("pedidos") == null || this.pedidos.length === 0) {
             return (
-                <div className="p-3 m-auto shadow rounded">
+                <div>
                     <br />
-                    <Container>
+                    <Container className="p-3 m-auto shadow rounded">
                         <center>
                             <h1>No hay pedidos.</h1>
                         </center>
@@ -72,9 +91,9 @@ class Pedido extends React.Component {
             );
         } else {
             return (
-                <div className="p-3 m-auto shadow rounded">
+                <div>
                     <br />
-                    <Container>
+                    <Container className="p-3 m-auto shadow rounded">
                         {this.renderProducts()}
                         <Row className="p-3 m-auto">
                             <center>

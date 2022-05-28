@@ -2,9 +2,7 @@ import React from 'react';
 import { Container, Card, Image, Row, Col, Button, Accordion, Modal, Tabs, Tab } from 'react-bootstrap';
 import { Restaurantes } from '../../data/Restaurantes';
 import { ProductosEj } from '../../data/ProductoEJ';
-import { PedidosEj } from '../../data/PedidosEj';
 import { Link } from 'react-router-dom';
-import uuid from 'react-uuid';
 
 
 class Restaurante extends React.Component {
@@ -14,6 +12,7 @@ class Restaurante extends React.Component {
             id: null,
             nombre: null,
             img: null,
+            productos: null,
         };
         this.pedido = null;
         this.pedidos = null;
@@ -44,7 +43,6 @@ class Restaurante extends React.Component {
     }
 
     componentWillUnmount() {
-
         if (this.pedido != null) {
             console.log(this.pedido);
             console.log(JSON.parse(JSON.stringify(this.pedido)));
@@ -56,15 +54,14 @@ class Restaurante extends React.Component {
             localStorage.setItem("pedidos", JSON.stringify(this.pedidos))
             console.log(JSON.parse(localStorage.getItem("pedidos")));
         }
-        // localStorage.removeItem("restaurante");
     }
 
 
     componentDidMount() {
         this.setState({
-            id: Restaurantes[localStorage.getItem("restaurante")].id,
-            nombre: Restaurantes[localStorage.getItem("restaurante")].name,
-            img: Restaurantes[localStorage.getItem("restaurante")].img
+            id: Restaurantes[this.props.id].id,
+            nombre: Restaurantes[this.props.id].name,
+            img: Restaurantes[this.props.id].img
         })
     }
 
@@ -76,7 +73,7 @@ class Restaurante extends React.Component {
                     <Accordion.Body>
                         <Row xs={1} md={4} className="g-4">
                             {ProductosEj.map((item) => {
-                                if (item.idR == this.state.id) {
+                                if (item.idR === this.state.id) {
                                     return (
                                         <Col>
                                             <Card>
@@ -115,46 +112,47 @@ class Restaurante extends React.Component {
 
     render() {
         return (
-            <Container className="p-3 m-auto shadow rounded">
+            <div>
                 <br />
-                <h1>
-                    <Image
-                        src={this.state.img}
-                        height="100px">
-                    </Image>{this.state.nombre}
-                </h1>
-                <Tabs defaultActiveKey="inicio" id="uncontrolled-tab-example" className="mb-3">
-                    <Tab eventKey="inicio" title="Inicio">
-                        <br />
-                        <h1>Informacion</h1>
-                    </Tab>
-                    <Tab eventKey="productos" title="Productos">
-                        <br />
-                        {this.todosProductos()}
-                    </Tab>
-                    <Tab eventKey="contacto" title="Contacto">
-                        <br />
-                        <h1>Informacion</h1>
-                    </Tab>
-                </Tabs>
-
+                <Container className="p-3 m-auto shadow rounded">
+                    <h1>
+                        <Image
+                            src={this.state.img}
+                            height="100px">
+                        </Image>{this.state.nombre}
+                    </h1>
+                    <Tabs defaultActiveKey="inicio" id="uncontrolled-tab-example" className="mb-3">
+                        <Tab eventKey="inicio" title="Inicio">
+                            <br />
+                            <h1>Informacion</h1>
+                        </Tab>
+                        <Tab eventKey="productos" title="Productos">
+                            <br />
+                            {this.todosProductos()}
+                        </Tab>
+                        <Tab eventKey="contacto" title="Contacto">
+                            <br />
+                            <h1>Informacion</h1>
+                        </Tab>
+                    </Tabs>
+                    <br />
+                    <Modal show={this.state.setShow} onHide={() => this.setState({ setShow: false })}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Producto añadido</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>Ahora puedes seguir añadiendo productos al pedido o ver el pedido.</Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={() => this.setState({ setShow: false })}>
+                                Seguir Añadiendo
+                            </Button>
+                            <Button variant="primary" as={Link} to="/pedido">
+                                Ver Pedido
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+                </Container >
                 <br />
-
-                <Modal show={this.state.setShow} onHide={() => this.setState({ setShow: false })}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Producto añadido</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>Ahora puedes seguir añadiendo productos al pedido o ver el pedido.</Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={() => this.setState({ setShow: false })}>
-                            Seguir Añadiendo
-                        </Button>
-                        <Button variant="primary" as={Link} to="/pedido">
-                            Ver Pedido
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-            </Container >
+            </div>
         );
     }
 }
