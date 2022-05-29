@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from 'react-router-dom';
 import { Card, Container, Row, Button, Col, CardGroup, Form } from 'react-bootstrap';
 
 class PerfilCarta extends React.Component {
@@ -60,9 +59,8 @@ class PerfilCarta extends React.Component {
 
         if (this.state.editar === false) {
             return (
-                <div>
-                    <br />
-                    <Container>
+                    <Container fluid>
+                        <br />
                         <Row>
                             <Col xs={12} className="m-auto">
                                 <Card >
@@ -89,14 +87,12 @@ class PerfilCarta extends React.Component {
                             </Col>
                         </Row>
                     </Container>
-                </div>
             )
 
         } else {
             return (
-                <div>
-                    <br />
-                    <Container>
+                    <Container fluid>
+                        <br />
                         <Row>
                             <Col xs={12} className="m-auto">
                                 <CardGroup>
@@ -163,7 +159,6 @@ class PerfilCarta extends React.Component {
                             </Col>
                         </Row>
                     </Container>
-                </div>
             );
         }
     }

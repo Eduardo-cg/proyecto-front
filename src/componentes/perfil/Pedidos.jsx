@@ -20,54 +20,50 @@ class Pedidos extends React.Component {
 
     render() {
         return (
-            <div>
+            <Container fluid>
                 <br />
-                <Container>
-                    <Row>
-                        <Col xs={8} md={10} className="p-3 m-auto">
-                            <Form.Select aria-label="Default select example" ref={this.selectValue}>
-                                <option/>
-                                {PedidosEj.map((item) => {
-                                    return <option key={uuid()} value={item.id} >
-                                        Pedido: {item.id}/{item.fecha}</option>
+                <Row>
+                    <Col xs={12} sm={9} lg={10} className="p-3 m-auto">
+                        <Form.Select aria-label="Default select example" ref={this.selectValue}>
+                            <option />
+                            {PedidosEj.map((item) => {
+                                return <option key={uuid()} value={item.id} >
+                                    Pedido: {item.id}/{item.fecha}</option>
+                            })}
+                        </Form.Select>
+                    </Col>
+                    <Col className="p-3 m-auto d-grid gap-2">
+                        <Button variant="outline-primary" onClick={this.actualizar}>Seleccionar</Button>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col className="p-3 m-auto">
+                        <b>Id: {this.state.Pedido.id} Restaurante: {this.state.Pedido.idR} Fecha: {this.state.Pedido.fecha} Precio: {this.state.Pedido.precio}</b>
+                        <br />
+                        <br />
+                        <Table responsive striped bordered hover>
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Precio</th>
+                                    <th>Unidades</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.Pedido.lineas.map((item) => {
+                                    return (
+                                        <tr>
+                                            <td>{item.nombre}</td>
+                                            <td>{item.precio}</td>
+                                            <td>{item.unidades}</td>
+                                        </tr>
+                                    );
                                 })}
-                            </Form.Select>
-                        </Col>
-                        <Col xs={4} md={2} className="p-3 m-auto">
-                            <center>
-                                <Button size="lg" variant="outline-primary" onClick={this.actualizar}>Seleccionar</Button>
-                            </center>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col className="p-3 m-auto">
-                            <b>Id: {this.state.Pedido.id} Restaurante: {this.state.Pedido.idR} Fecha: {this.state.Pedido.fecha} Precio: {this.state.Pedido.precio}</b>
-                            <br />
-                            <br />
-                            <Table striped bordered hover>
-                                <thead>
-                                    <tr>
-                                        <th>Producto</th>
-                                        <th>Precio</th>
-                                        <th>Unidades</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {this.state.Pedido.lineas.map((item) => {
-                                        return (
-                                            <tr>
-                                                <td>{item.nombre}</td>
-                                                <td>{item.precio}</td>
-                                                <td>{item.unidades}</td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </Table>
-                        </Col>
-                    </Row>
-                </Container>
-            </div>
+                            </tbody>
+                        </Table>
+                    </Col>
+                </Row>
+            </Container>
         );
     }
 }

@@ -16,8 +16,8 @@ class Registro extends React.Component {
     }
 
     registrarse() {
-        if (this.inputName.current.value == "" || this.inputEmail.current.value == "" || this.inputUser.current.value == ""
-            || this.inputPassword.current.value == "" || this.inputRPassword.current.value == "") {
+        if (this.inputName.current.value === "" || this.inputEmail.current.value === "" || this.inputUser.current.value === ""
+            || this.inputPassword.current.value === "" || this.inputRPassword.current.value === "") {
             alert('Introduce todos los campos.');
         } else if (this.inputPassword.current.value !== this.inputRPassword.current.value) {
             alert('Las contreñas no coinciden.');
@@ -35,56 +35,53 @@ class Registro extends React.Component {
     render() {
 
         return (
-            <div>
-                <br />
-                <Container>
-                    <Row>
-                        <Col xs={6} className="p-3 m-auto shadow rounded">
-                            <Form>
-                                <FloatingLabel controlId="floatingInput" label="Nombre" className="mb-3">
-                                    <Form.Control size='lg'
-                                        type="text"
-                                        placeholder="Nombre"
-                                        ref={this.inputName} />
-                                </FloatingLabel>
+            <Container fluid="md">
+                <Row>
+                    <Col xs={12} md={8} lg={6} className="p-3 m-auto shadow rounded">
+                        <Form>
+                            <FloatingLabel controlId="floatingInput" label="Nombre" className="mb-3">
+                                <Form.Control size='lg'
+                                    type="text"
+                                    placeholder="Nombre"
+                                    ref={this.inputName} />
+                            </FloatingLabel>
 
-                                <FloatingLabel controlId="floatingInput" label="Email" className="mb-3">
-                                    <Form.Control size='lg'
-                                        type="email"
-                                        placeholder="Email"
-                                        ref={this.inputEmail} />
-                                </FloatingLabel>
+                            <FloatingLabel controlId="floatingInput" label="Email" className="mb-3">
+                                <Form.Control size='lg'
+                                    type="email"
+                                    placeholder="Email"
+                                    ref={this.inputEmail} />
+                            </FloatingLabel>
 
-                                <FloatingLabel controlId="floatingInput" label="Usuario" className="mb-3">
-                                    <Form.Control size='lg'
-                                        type="text"
-                                        placeholder="Usuario"
-                                        ref={this.inputUser} />
-                                </FloatingLabel>
+                            <FloatingLabel controlId="floatingInput" label="Usuario" className="mb-3">
+                                <Form.Control size='lg'
+                                    type="text"
+                                    placeholder="Usuario"
+                                    ref={this.inputUser} />
+                            </FloatingLabel>
 
-                                <FloatingLabel controlId="floatingPassword" label="Contraseña" className="mb-3">
-                                    <Form.Control size='lg'
-                                        type="password"
-                                        placeholder="Contraseña"
-                                        ref={this.inputPassword} />
-                                </FloatingLabel>
+                            <FloatingLabel controlId="floatingPassword" label="Contraseña" className="mb-3">
+                                <Form.Control size='lg'
+                                    type="password"
+                                    placeholder="Contraseña"
+                                    ref={this.inputPassword} />
+                            </FloatingLabel>
 
-                                <FloatingLabel controlId="floatingPassword" label="Repetir Contraseña" className="mb-3">
-                                    <Form.Control size='lg'
-                                        type="password"
-                                        placeholder="Repetir Contraseña"
-                                        ref={this.inputRPassword} />
-                                </FloatingLabel>
-                            </Form>
-                            <div className="d-grid gap-2">
-                                <Button size='lg' variant="primary" type="button" onClick={this.registrarse}>
-                                    Registarse
-                                </Button>
-                            </div>
-                        </Col>
-                    </Row>
-                </Container>
-            </div>
+                            <FloatingLabel controlId="floatingPassword" label="Repetir Contraseña" className="mb-3">
+                                <Form.Control size='lg'
+                                    type="password"
+                                    placeholder="Repetir Contraseña"
+                                    ref={this.inputRPassword} />
+                            </FloatingLabel>
+                        </Form>
+                        <div className="d-grid gap-2">
+                            <Button size='lg' variant="primary" type="button" onClick={this.registrarse}>
+                                Registarse
+                            </Button>
+                        </div>
+                    </Col>
+                </Row>
+            </Container>
         );
 
     }

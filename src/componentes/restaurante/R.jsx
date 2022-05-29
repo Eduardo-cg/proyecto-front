@@ -1,17 +1,16 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import { Container } from 'react-bootstrap';
 import Restaurante from './Restaurante';
 import uuid from 'react-uuid';
 
 function R() {
-
     const { id } = useParams();
-    console.log(id);
 
     return (
-        <div>
+        <Container fluid="md" className="p-3 m-auto shadow rounded">
             <Restaurante key={uuid()} id={id} />
-        </div>
+        </Container>
     );
 
 }

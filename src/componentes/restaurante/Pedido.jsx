@@ -21,12 +21,14 @@ class Pedido extends React.Component {
     }
 
     quitar(x, y) {
-        console.log(x + "" + y);
-
-        if (this.pedidos[x].lineas.length == 1) {
-            this.pedidos.splice(x, 1);
+        if (this.pedidos[x].lineas[y].unidades == 1) {
+            if (this.pedidos[x].lineas.length === 1) {
+                this.pedidos.splice(x, 1);
+            } else {
+                this.pedidos[x].lineas.splice(y, 1);
+            }
         } else {
-            this.pedidos[x].lineas.splice(y, 1);
+            this.pedidos[x].lineas[y].unidades--;
         }
 
         this.setState({ pe: this.pedidos });
@@ -79,44 +81,37 @@ class Pedido extends React.Component {
 
         if (localStorage.getItem("pedidos") == null || this.pedidos.length === 0) {
             return (
-                <div>
+                <Container className="p-3 m-auto shadow rounded">
                     <br />
-                    <Container className="p-3 m-auto shadow rounded">
-                        <center>
-                            <h1>No hay pedidos.</h1>
-                        </center>
-                    </Container>
+                    <center>
+                        <h1>No hay pedidos.</h1>
+                    </center>
                     <br />
-                </div>
+                </Container>
             );
         } else {
             return (
-                <div>
-                    <br />
-                    <Container className="p-3 m-auto shadow rounded">
-                        {this.renderProducts()}
-                        <Row className="p-3 m-auto">
-                            <center>
-                                <Button disabled={this.state.boton} size="lg" variant="outline-primary" onClick={this.pagar}>Pagar</Button>
-                            </center>
-                        </Row>
-                        <Modal show={this.state.setShow} onHide={() => this.setState({ setShow: false, pe: [] }, () => localStorage.removeItem("pedidos"))}>
-                            <Modal.Header closeButton>
-                                <Modal.Title>Pedido Hecho</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Footer>
-                                <Button variant="primary" onClick={() => this.setState({ setShow: false, pe: [] }, () => localStorage.removeItem("pedidos"))}>
-                                    Aceptar
-                                </Button>
-                            </Modal.Footer>
-                        </Modal>
-                    </Container>
-                    <br />
-                </div>
+                <Container className="p-3 m-auto shadow rounded">
+                    {this.renderProducts()}
+                    <Row className="p-3 m-auto">
+                        <center>
+                            <Button disabled={this.state.boton} size="lg" variant="outline-primary" onClick={this.pagar}>Pagar</Button>
+                        </center>
+                    </Row>
+                    <Modal show={this.state.setShow} onHide={() => this.setState({ setShow: false, pe: [] }, () => localStorage.removeItem("pedidos"))}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Pedido Hecho</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Footer>
+                            <Button variant="primary" onClick={() => this.setState({ setShow: false, pe: [] }, () => localStorage.removeItem("pedidos"))}>
+                                Aceptar
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+                </Container>
             );
         }
-
-
     }
 }
+
 export default Pedido;

@@ -20,52 +20,45 @@ class Perfil extends React.Component {
     if (localStorage.getItem('id') !== 'null' && localStorage.getItem('id') !== null) {
 
       return (
-        <div>
-          <Container>
-            <br />
-            <Row>
-              <Col xs={12} className="p-3 m-auto shadow rounded">
-                <Tabs defaultActiveKey="info" id="uncontrolled-tab-example" className="mb-3">
-                  <Tab eventKey="info" title="Informacion Personal">
-                    <PerfilCarta />
-                  </Tab>
-                  <Tab eventKey="infopagos" title="Informacion Pagos">
-                    <PagoInfoCarta />
-                  </Tab>
-                  <Tab eventKey="pedidos" title="Pedidos">
-                    <Pedidos />
-                  </Tab>
-                </Tabs>
-                <br />
-              </Col>
-            </Row>
-          </Container>
-        </div>
+        <Container fluid="md">
+          <Row>
+            <Col xs={12} className="p-3 m-auto shadow rounded">
+              <Tabs defaultActiveKey="info" id="uncontrolled-tab-example" className="mb-3">
+                <Tab eventKey="info" title="Informacion Personal">
+                  <PerfilCarta />
+                </Tab>
+                <Tab eventKey="infopagos" title="Informacion Pagos">
+                  <PagoInfoCarta />
+                </Tab>
+                <Tab eventKey="pedidos" title="Pedidos">
+                  <Pedidos />
+                </Tab>
+              </Tabs>
+            </Col>
+          </Row>
+        </Container>
       )
     } else {
       return (
-        <div>
-          <Container>
-            <br />
-            <Row>
-              <Col xs={12} md={6} className="p-3 m-auto shadow rounded">
-                <div className="d-grid gap-2">
-                  <Button variant="outline-primary" size="lg" as={Link} to="/login">Iniciar Sesion</Button>
-                </div>
-                <br />
-                <div className="me-auto" text-align="center">
-                  <h1 style={{ textAlign: "center" }}>
-                    o
-                  </h1>
-                </div>
-                <br />
-                <div className="d-grid gap-2">
-                  <Button variant="outline-secondary" size="lg" as={Link} to="/registro">Registrarse</Button>
-                </div>
-              </Col>
-            </Row>
-          </Container>
-        </div>
+        <Container fluid="md">
+          <Row>
+            <Col xs={12} md={6} className="p-3 m-auto shadow rounded">
+              <div className="d-grid gap-2">
+                <Button variant="outline-primary" size="lg" as={Link} to="/login">Iniciar Sesion</Button>
+              </div>
+              <br />
+              <div className="me-auto" text-align="center">
+                <h1 style={{ textAlign: "center" }}>
+                  o
+                </h1>
+              </div>
+              <br />
+              <div className="d-grid gap-2">
+                <Button variant="outline-secondary" size="lg" as={Link} to="/registro">Registrarse</Button>
+              </div>
+            </Col>
+          </Row>
+        </Container>
       );
     }
   }

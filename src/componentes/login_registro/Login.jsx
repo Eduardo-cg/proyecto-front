@@ -88,34 +88,31 @@ class Login extends React.Component {
         } else {
 
             return (
-                <div>
-                    <Container>
-                        <br />
-                        <Row>
-                            <Col xs={12} md={6} className="p-3 m-auto  shadow rounded">
-                                <Form>
-                                    <FloatingLabel controlId="floatingInput" label="Usuario" className="mb-3">
-                                        <Form.Control size='lg'
-                                            type="email"
-                                            placeholder="Usuario"
-                                            ref={this.inputUser} />
-                                    </FloatingLabel>
-                                    <FloatingLabel controlId="floatingPassword" label="Contraseña" className="mb-3">
-                                        <Form.Control size='lg'
-                                            type="password"
-                                            placeholder="Contraseña"
-                                            ref={this.inputPassword} />
-                                    </FloatingLabel>
-                                </Form>
-                                <div className="d-grid gap-2">
-                                    <Button size='lg' variant="primary" type="button" onClick={this.login}>
-                                        Iniciar Sesion
-                                    </Button>
-                                </div>
-                            </Col>
-                        </Row>
-                    </Container>
-                </div>
+                <Container fluid="md">
+                    <Row>
+                        <Col xs={12} md={8} lg={4} className="p-3 m-auto shadow rounded">
+                            <Form>
+                                <FloatingLabel controlId="floatingInput" label="Usuario" className="mb-3">
+                                    <Form.Control size='lg'
+                                        type="email"
+                                        placeholder="Usuario"
+                                        ref={this.inputUser} />
+                                </FloatingLabel>
+                                <FloatingLabel controlId="floatingPassword" label="Contraseña" className="mb-3">
+                                    <Form.Control size='lg'
+                                        type="password"
+                                        placeholder="Contraseña"
+                                        ref={this.inputPassword} />
+                                </FloatingLabel>
+                            </Form>
+                            <div className="d-grid gap-2">
+                                <Button size='lg' variant="primary" type="button" onClick={this.login}>
+                                    Iniciar Sesion
+                                </Button>
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
             );
         }
     }
