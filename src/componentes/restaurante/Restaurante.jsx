@@ -9,9 +9,7 @@ class Restaurante extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: null,
-            nombre: null,
-            img: null,
+            restaurante: Restaurantes[this.props.id],
             productos: [],
             categorias: [],
         };
@@ -70,9 +68,6 @@ class Restaurante extends React.Component {
         });
 
         this.setState({
-            id: Restaurantes[this.props.id].id,
-            nombre: Restaurantes[this.props.id].name,
-            img: Restaurantes[this.props.id].img,
             productos: filtrado,
             categorias: ["Comida", "Bebida"]
         });
@@ -177,23 +172,25 @@ class Restaurante extends React.Component {
             <Container fluid>
                 <h1>
                     <Image
-                        src={this.state.img}
+                        src={this.state.restaurante.img}
                         height="100px">
-                    </Image>{this.state.nombre}
+                    </Image>{this.state.restaurante.name}
                 </h1>
-                <Tabs defaultActiveKey="inicio" id="uncontrolled-tab-example" className="mb-3">
-                    <Tab eventKey="inicio" title="Inicio">
-                        <br />
-                        <h1>Informacion</h1>
-                        {this.todosProductos()}
-                    </Tab>
+                <Tabs defaultActiveKey="productos" id="uncontrolled-tab-example" className="mb-3">
                     <Tab eventKey="productos" title="Productos">
                         <br />
                         {this.categorias()}
+                        {this.todosProductos()}
                     </Tab>
-                    <Tab eventKey="contacto" title="Contacto">
+                    <Tab eventKey="info" title="Informacion">
                         <br />
-                        <h1>Informacion</h1>
+                        <p>{this.state.restaurante.desc}</p>
+                        <h6>Direccion: </h6>
+                        <p>{this.state.restaurante.direccion}</p>
+                        <h6>Horario: </h6>
+                        <p>{this.state.restaurante.horario}</p>
+                        <h6>Telefono: </h6>
+                        <p>{this.state.restaurante.tlf}</p>
                     </Tab>
                 </Tabs>
                 <br />

@@ -43,15 +43,14 @@ class Pedido extends React.Component {
             return (
                 <Row>
                     <Col className="p-3 m-auto">
-                        <b>Id: {item.id} Restaurante: {item.idR} Fecha: {item.fecha} Precio: {item.precio}</b>
-                        <br />
-                        <br />
+                        <h5>Id: {item.id} Restaurante: {item.idR} Fecha: {item.fecha} Precio Total: {item.precio}</h5>
                         <Table striped bordered hover>
                             <thead>
                                 <tr>
                                     <th>Producto</th>
                                     <th>Precio</th>
                                     <th>Unidades</th>
+                                    <th>Total</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -59,10 +58,11 @@ class Pedido extends React.Component {
                                     return (
                                         <tr>
                                             <td>{l.nombre}</td>
-                                            <td>{l.precio}</td>
+                                            <td>{l.precio} </td>
                                             <td>{l.unidades}</td>
+                                            <td>{l.precio * l.unidades} </td>
                                             <td className="d-grid gap-2">
-                                                <Button variant="outline-danger" onClick={() => this.quitar(x, y)}>
+                                                <Button disabled={this.state.boton} variant="outline-danger" onClick={() => this.quitar(x, y)}>
                                                     Quitar
                                                 </Button>
                                             </td>

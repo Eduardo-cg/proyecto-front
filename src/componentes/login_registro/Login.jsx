@@ -1,7 +1,7 @@
 import React from 'react';
-import { Container, Form, Button, Row, Col, FloatingLabel, Image } from 'react-bootstrap';
+import { Container, Form, Button, Row, Col, FloatingLabel } from 'react-bootstrap';
 import { Usuarios } from '../../data/Usuarios';
-import perfil from '../../img/perfil.png'
+import { Redirect } from 'react-router-dom';
 
 
 class Login extends React.Component {
@@ -67,23 +67,7 @@ class Login extends React.Component {
     render() {
         if (this.state.Usuario !== null) {
             return (
-                <div>
-                    <Container>
-                        <br />
-                        <Row >
-                            <Col xs={12} md={6} className="p-3 m-auto shadow rounded">
-                                <center>
-                                    <h1>¡Bienvenido!</h1>
-                                    <br />
-                                    <Image
-                                        className='rounded-circle'
-                                        src={perfil} height="70px"
-                                        rounded={true} />
-                                </center>
-                            </Col>
-                        </Row>
-                    </Container>
-                </div>
+                <Redirect to='/perfil' />
             );
         } else {
 

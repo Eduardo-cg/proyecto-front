@@ -1,6 +1,7 @@
 import './App.css';
 import React from "react";
 import { Switch, BrowserRouter as Router, Route } from 'react-router-dom';
+import uuid from 'react-uuid';
 import MenuNavBar from "./componentes/MenuNavBar";
 import Inicio from "./componentes/inicio/Incio";
 import Login from "./componentes/login_registro/Login";
@@ -19,13 +20,13 @@ function App() {
       <div>
         <br />
         <Switch>
-          <Route exact path="/inicio" component={Inicio} />
-          <Route exact path="/perfil" component={Perfil} />
-          <Route exact path="login" component={Login} />
-          <Route exact path="registro" component={Registro} />
-          <Route exact path="/pedido" component={Pedido} />
-          <Route exact path="/restaurante/:id" component={R} />
-          <Route exact component={NotFound} />
+          <Route key={uuid()} exact path="/inicio" component={Inicio} />
+          <Route key={uuid()} exact path="/perfil" component={Perfil} />
+          <Route key={uuid()} exact path="/login" component={Login} />
+          <Route key={uuid()} exact path="/registro" component={Registro} />
+          <Route key={uuid()} exact path="/pedido" component={Pedido} />
+          <Route key={uuid()} exact path="/restaurante/:id" component={R} />
+          <Route key={uuid()} exact component={NotFound} />
         </Switch>
         <br />
       </div>

@@ -1,166 +1,141 @@
 import React from "react";
-import { Card, Container, Row, Button, Col, CardGroup, Form } from 'react-bootstrap';
+import { Card, Container, Row, Button, Col, Form } from 'react-bootstrap';
 
 class PagoInfoCarta extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { user: '', email: '', pass: '', name: '', editar: false };
-        this.logout = this.logout.bind(this);
-        this.changeEditar = this.changeEditar.bind(this);
-        this.guardarCambios = this.guardarCambios.bind(this);
-
-        this.inputUser = React.createRef();
-        this.inputPassword = React.createRef();
-        this.inputEmail = React.createRef();
+        this.state = { pagos: [], editar: false };
+        this.inputNum = React.createRef();
+        this.inputVal = React.createRef();
+        this.inputCvv = React.createRef();
         this.inputNombre = React.createRef();
-
+        this.pagos = this.state.pagos;
     }
+
     componentDidMount() {
-        if (localStorage.getItem('id') !== 'null') {
-            this.setState({
-                id: localStorage.getItem('id'),
-                user: localStorage.getItem('user'),
-                email: localStorage.getItem('email'),
-                pass: localStorage.getItem('pass'),
-                name: localStorage.getItem('name'),
-            });
+        var a = JSON.parse(localStorage.getItem('pagos'));
+        if (a !== null) {
+            this.pagos = a;
+            this.setState({ pagos: this.pagos });
         }
     }
 
-    logout() {
-        localStorage.removeItem('id');
-        localStorage.removeItem('user');
-        localStorage.removeItem('pass');
-        localStorage.removeItem('name');
-        localStorage.removeItem('email');
-        window.location.reload();
+    quitar(x) {
+        this.pagos.splice(x, 1);
+        this.setState({ pagos: this.pagos });
+        localStorage.removeItem("pagos");
+        localStorage.setItem("pagos", JSON.stringify(this.pagos));
     }
 
-    changeEditar() {
+    add() {
+        var a = {
+            num: this.inputNum.current.value,
+            val: this.inputVal.current.value,
+            cvv: this.inputCvv.current.value,
+            nombre: this.inputNombre.current.value
+        };
+        this.pagos.push(a);
+        localStorage.setItem('pagos', JSON.stringify(this.pagos));
         this.setState({ editar: !this.state.editar })
     }
 
-    guardarCambios() {
-        localStorage.setItem('user', this.inputUser.current.value);
-        localStorage.setItem('pass', this.inputPassword.current.value);
-        localStorage.setItem('name', this.inputNombre.current.value);
-        localStorage.setItem('email', this.inputEmail.current.value);
-
-        this.setState({
-            id: localStorage.getItem('id'),
-            user: localStorage.getItem('user'),
-            email: localStorage.getItem('email'),
-            pass: localStorage.getItem('pass'),
-            name: localStorage.getItem('name'),
-        });
+    changeEditar() {
+        console.log(this.state.editar)
+        this.setState({ editar: !this.state.editar })
     }
 
     render() {
-
-        if (this.state.editar === false) {
+        if (this.state.pagos.length === 0 && this.state.editar === false) {
+            return (
+                <Container fluid>
+                    <br />
+                    <center>
+                        <Button size='lg' variant="outline-primary" type="button" onClick={() => this.changeEditar()} >
+                            Añadir
+                        </Button>
+                    </center>
+                </Container>
+            );
+        } if (this.state.editar === true) {
             return (
                 <Container fluid>
                     <br />
                     <Row>
-                        <Col xs={12} className="m-auto">
-                            <Card >
+                        <Col xs={12} sm={8} lg={6} className="m-auto">
+                            <Card>
                                 <Card.Body>
-                                    <Card.Title>
-                                        Numero de tarjeta: {this.state.user}
-                                        <p />
-                                        Valided: {this.state.email}
-                                        <p />
-                                        CVV: {this.state.pass}
-                                        <p />
-                                        Nombre: {this.state.name}
-                                    </Card.Title>
+                                    <Form>
+                                        <Form.Label>Numero de tarjeta:</Form.Label>
+                                        <Form.Control size='lg'
+                                            type="number"
+                                            ref={this.inputNum} />
+
+                                        <Form.Label>Valided:</Form.Label>
+                                        <Form.Control size='lg'
+                                            type="date"
+                                            ref={this.inputVal} />
+
+                                        <Form.Label>CVV:</Form.Label>
+                                        <Form.Control size='lg'
+                                            type="number"
+                                            ref={this.inputCvv} />
+
+                                        <Form.Label>Nombre:</Form.Label>
+                                        <Form.Control size='lg'
+                                            type="text"
+                                            ref={this.inputNombre} />
+                                    </Form>
                                     <br />
-                                    <Button size='lg' variant="outline-danger" type="button" onClick={this.logout} >
-                                        Quitar
-                                    </Button>
-                                    &nbsp;
-                                    <Button size='lg' variant="outline-primary" type="button" onClick={this.changeEditar}>
-                                        Editar
-                                    </Button>
+                                    <div className="d-grid">
+                                        <Button size='lg' variant="primary" type="button" onClick={() => this.add()}>
+                                            Guardar Cambios
+                                        </Button>
+                                    </div>
                                 </Card.Body>
                             </Card>
                         </Col>
                     </Row>
                 </Container>
-            )
-
+            );
         } else {
             return (
                 <Container fluid>
-                    <br />
-                    <Row>
-                        <Col xs={12} className="m-auto">
-                            <CardGroup>
-                                <Card >
-                                    <Card.Body>
-                                        <Card.Title>
-                                            Numero de tarjeta: {this.state.user}
-                                            <p />
-                                            Valided: {this.state.email}
-                                            <p />
-                                            CVV: {this.state.pass}
-                                            <p />
-                                            Nombre: {this.state.name}
-                                        </Card.Title>
-                                        <br />
-                                        <div>
-                                            <Button size='lg' variant="outline-danger" type="button" onClick={this.logout} >
+                    {this.pagos.map((item, x) => {
+                        return (
+                            <Row>
+                                <Col xs={12} className="m-auto">
+                                    <Card >
+                                        <Card.Body>
+                                            <Card.Title>
+                                                Numero de tarjeta: {item.num}
+                                                <p />
+                                                Valided: {item.val}
+                                                <p />
+                                                CVV: {item.cvv}
+                                                <p />
+                                                Nombre: {item.nombre}
+                                            </Card.Title>
+                                            <br />
+                                            <Button size='lg' variant="outline-danger" type="button" onClick={() => this.quitar(x)} >
                                                 Quitar
                                             </Button>
-                                            &nbsp;
-                                            <Button size='lg' variant="outline-primary" type="button" onClick={this.changeEditar}>
-                                                Dejar de Editar
-                                            </Button>
-                                        </div>
-                                    </Card.Body>
-                                </Card>
-
-                                <Card>
-                                    <Card.Body>
-                                        <Form>
-                                            <Form.Label>Usuario:</Form.Label>
-                                            <Form.Control size='lg'
-                                                type="text"
-                                                defaultValue={this.state.user}
-                                                ref={this.inputUser} />
-
-                                            <Form.Label>Email:</Form.Label>
-                                            <Form.Control size='lg'
-                                                type="email"
-                                                defaultValue={this.state.email}
-                                                ref={this.inputEmail} />
-
-                                            <Form.Label>Contraseña:</Form.Label>
-                                            <Form.Control size='lg'
-                                                type="password"
-                                                defaultValue={this.state.pass}
-                                                ref={this.inputPassword} />
-
-                                            <Form.Label>Nombre:</Form.Label>
-                                            <Form.Control size='lg'
-                                                type="text"
-                                                defaultValue={this.state.name}
-                                                ref={this.inputNombre} />
-                                        </Form>
-                                        <br />
-                                        <div className="d-grid gap-2">
-                                            <Button className="d-grid gap-2" size='lg' variant="primary" type="button" onClick={this.guardarCambios}>
-                                                Guardar Cambios
-                                            </Button>
-                                        </div>
-                                    </Card.Body>
-                                </Card>
-                            </CardGroup>
-                        </Col>
-                    </Row>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            </Row>
+                        );
+                    })}
+                    <br />
+                    <center>
+                        <Button size='lg' variant="outline-primary" type="button" onClick={() => this.changeEditar()} >
+                            Añadir
+                        </Button>
+                    </center>
                 </Container>
             );
         }
+
+
     }
 }
 
