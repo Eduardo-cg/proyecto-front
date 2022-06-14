@@ -1,21 +1,32 @@
 import React from "react";
 import { Table, Container, Row, Button, Col, Form } from 'react-bootstrap';
 import uuid from 'react-uuid';
-import { PedidosEj } from "../../data/PedidosEj";
+import { URL_BACK } from '../../data/Constantes';
 
 class Pedidos extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { Pedido: PedidosEj[0] };
+        this.state = { Usuario: JSON.parse(localStorage.getItem('user')), Pedido: { lineasPedidos: [] }, Pedidos: [] };
+        this.Pedidos = [];
         this.selectValue = React.createRef();
         this.actualizar = this.actualizar.bind(this);
 
     }
 
-    actualizar() {
-        if (this.selectValue.current.value !== '') {
-            this.setState({ Pedido: PedidosEj[this.selectValue.current.value] });
+    async actualizar() {
+        if (this.selectValue.current.value != 0) {
+            let response = await fetch(URL_BACK + '/pedido/?id=' + this.selectValue.current.value);
+            let data = await response.json();
+            this.setState({ Pedido: data });
         }
+
+    }
+
+    async componentDidMount() {
+        let response = await fetch(URL_BACK + '/pedido/listar/?idUsuario=' + this.state.Usuario.id);
+        let data = await response.json();
+        this.Pedidos = data;
+        this.setState({ Pedidos: data });
     }
 
     render() {
@@ -25,8 +36,8 @@ class Pedidos extends React.Component {
                 <Row>
                     <Col xs={12} sm={9} lg={10} className="p-3 m-auto">
                         <Form.Select aria-label="Default select example" ref={this.selectValue}>
-                            <option />
-                            {PedidosEj.map((item) => {
+                            <option key={uuid()} value={0}/>
+                            {this.Pedidos.map((item) => {
                                 return <option key={uuid()} value={item.id} >
                                     Pedido: {item.id}/{item.fecha}</option>
                             })}
@@ -50,10 +61,10 @@ class Pedidos extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {this.state.Pedido.lineas.map((item) => {
+                                {this.state.Pedido.lineasPedidos.map((item) => {
                                     return (
                                         <tr>
-                                            <td>{item.nombre}</td>
+                                            <td>{item.producto.nombre}</td>
                                             <td>{item.precio}</td>
                                             <td>{item.unidades}</td>
                                         </tr>

@@ -1,38 +1,27 @@
 import React from "react";
-import { Card, Container, Row, Button, Col, CardGroup, Form } from 'react-bootstrap';
+import { Card, Container, Row, Button, Col, CardGroup, Form, Alert } from 'react-bootstrap';
+import { URL_BACK } from '../../data/Constantes';
 
 class PerfilCarta extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { user: '', email: '', pass: '', name: '', editar: false };
-        this.logout = this.logout.bind(this);
-        this.changeEditar = this.changeEditar.bind(this);
-        this.guardarCambios = this.guardarCambios.bind(this);
+        this.state = { Usuario: JSON.parse(localStorage.getItem('user')), editar: false, setShow: false };
 
-        this.inputUser = React.createRef();
-        this.inputPassword = React.createRef();
-        this.inputEmail = React.createRef();
         this.inputNombre = React.createRef();
-
+        this.inputApellido = React.createRef();
+        this.inputUsuario = React.createRef();
+        this.inputContra = React.createRef();
+        this.inputEmail = React.createRef();
+        this.inputTelefono = React.createRef();
+        this.inputDireccion = React.createRef();
     }
+
     componentDidMount() {
-        if (localStorage.getItem('id') !== 'null') {
-            this.setState({
-                id: localStorage.getItem('id'),
-                user: localStorage.getItem('user'),
-                email: localStorage.getItem('email'),
-                pass: localStorage.getItem('pass'),
-                name: localStorage.getItem('name'),
-            });
-        }
+
     }
 
     logout() {
-        localStorage.removeItem('id');
         localStorage.removeItem('user');
-        localStorage.removeItem('pass');
-        localStorage.removeItem('name');
-        localStorage.removeItem('email');
         window.location.reload();
     }
 
@@ -40,125 +29,176 @@ class PerfilCarta extends React.Component {
         this.setState({ editar: !this.state.editar })
     }
 
-    guardarCambios() {
-        localStorage.setItem('user', this.inputUser.current.value);
-        localStorage.setItem('pass', this.inputPassword.current.value);
-        localStorage.setItem('name', this.inputNombre.current.value);
-        localStorage.setItem('email', this.inputEmail.current.value);
+    async guardarCambios() {
 
-        this.setState({
-            id: localStorage.getItem('id'),
-            user: localStorage.getItem('user'),
-            email: localStorage.getItem('email'),
-            pass: localStorage.getItem('pass'),
-            name: localStorage.getItem('name'),
+        let u = this.state.Usuario;
+
+        u.nombre = this.inputNombre.current.value;
+        u.apellido = this.inputApellido.current.value;
+        u.usuario = this.inputUsuario.current.value;
+        u.contra = this.inputContra.current.value;
+        u.email = this.inputEmail.current.value;
+        u.telefono = this.inputTelefono.current.value;
+        u.direccion = this.inputDireccion.current.value;
+
+        let response = await fetch(URL_BACK + '/usuario/insertar', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(u)
         });
+
+        if (response.ok) {
+            this.setState({ Usuario: u });
+            localStorage.setItem('user', u)
+        } else {
+            this.setState({ setShow: true })
+        }
+    }
+
+    alerta() {
+        return (
+            <Row>
+                <Col xs={12} md={8} lg={4} className="p-3 m-auto">
+                    <Alert show={this.state.setShow} variant="danger" onClose={() => this.setState({ setShow: false })} dismissible>
+                        <Alert.Heading>Error al editar usuario.</Alert.Heading>
+                        <p>
+                            Error al editar usuario.
+                        </p>
+                    </Alert>
+                </Col>
+            </Row>
+        )
     }
 
     render() {
-
         if (this.state.editar === false) {
             return (
-                    <Container fluid>
-                        <br />
-                        <Row>
-                            <Col xs={12} className="m-auto">
+                <Container fluid>
+                    <br />
+                    <Row>
+                        <Col xs={12} className="m-auto">
+                            <Card >
+                                <Card.Body>
+                                    <Card.Title>
+                                        Nombre: {this.state.Usuario.nombre}
+                                        <p />
+                                        Apellidos: {this.state.Usuario.apellido}
+                                        <p />
+                                        Usuario: {this.state.Usuario.usuario}
+                                        <p />
+                                        Contraseña: {this.state.Usuario.contra}
+                                        <p />
+                                        Email: {this.state.Usuario.email}
+                                        <p />
+                                        Telefono: {this.state.Usuario.telefono}
+                                        <p />
+                                        Direccion: {this.state.Usuario.direccion}
+                                    </Card.Title>
+                                    <br />
+                                    <Button size='lg' variant="outline-danger" type="button" onClick={() => { this.logout() }} >
+                                        Logout
+                                    </Button>
+                                    &nbsp;
+                                    <Button size='lg' variant="outline-primary" type="button" onClick={() => { this.changeEditar() }}>
+                                        Editar
+                                    </Button>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    </Row>
+                </Container>
+            )
+        } else {
+            return (
+                <Container fluid>
+                    {this.alerta()}
+                    <Row>
+                        <Col xs={12} className="m-auto">
+                            <CardGroup>
                                 <Card >
                                     <Card.Body>
                                         <Card.Title>
-                                            Usuario: {this.state.user}
+                                            Nombre: {this.state.Usuario.nombre}
                                             <p />
-                                            Email: {this.state.email}
+                                            Apellidos: {this.state.Usuario.apellido}
                                             <p />
-                                            Pass: {this.state.pass}
+                                            Usuario: {this.state.Usuario.usuario}
                                             <p />
-                                            Nombre: {this.state.name}
+                                            Contraseña: {this.state.Usuario.contra}
+                                            <p />
+                                            Email: {this.state.Usuario.email}
+                                            <p />
+                                            Telefono: {this.state.Usuario.telefono}
+                                            <p />
+                                            Direccion: {this.state.Usuario.direccion}
                                         </Card.Title>
                                         <br />
-                                        <Button size='lg' variant="outline-danger" type="button" onClick={this.logout} >
-                                            Logout
-                                        </Button>
-                                        &nbsp;
-                                        <Button size='lg' variant="outline-primary" type="button" onClick={this.changeEditar}>
-                                            Editar
-                                        </Button>
+                                        <div>
+                                            <Button size='lg' variant="outline-danger" type="button" onClick={() => { this.logout() }} >
+                                                Logout
+                                            </Button>
+                                            &nbsp;
+                                            <Button size='lg' variant="outline-primary" type="button" onClick={() => { this.changeEditar() }}>
+                                                Dejar de Editar
+                                            </Button>
+                                        </div>
                                     </Card.Body>
                                 </Card>
-                            </Col>
-                        </Row>
-                    </Container>
-            )
 
-        } else {
-            return (
-                    <Container fluid>
-                        <br />
-                        <Row>
-                            <Col xs={12} className="m-auto">
-                                <CardGroup>
-                                    <Card >
-                                        <Card.Body>
-                                            <Card.Title>
-                                                Usuario: {this.state.user}
-                                                <p />
-                                                Email: {this.state.email}
-                                                <p />
-                                                Pass: {this.state.pass}
-                                                <p />
-                                                Nombre: {this.state.name}
-                                            </Card.Title>
-                                            <br />
-                                            <div>
-                                                <Button size='lg' variant="outline-danger" type="button" onClick={this.logout} >
-                                                    Logout
-                                                </Button>
-                                                &nbsp;
-                                                <Button size='lg' variant="outline-primary" type="button" onClick={this.changeEditar}>
-                                                    Dejar de Editar
-                                                </Button>
-                                            </div>
-                                        </Card.Body>
-                                    </Card>
-
-                                    <Card>
-                                        <Card.Body>
-                                            <Form>
-                                                <Form.Label>Usuario:</Form.Label>
-                                                <Form.Control size='lg'
-                                                    type="text"
-                                                    defaultValue={this.state.user}
-                                                    ref={this.inputUser} />
-
-                                                <Form.Label>Email:</Form.Label>
-                                                <Form.Control size='lg'
-                                                    type="email"
-                                                    defaultValue={this.state.email}
-                                                    ref={this.inputEmail} />
-
-                                                <Form.Label>Contraseña:</Form.Label>
-                                                <Form.Control size='lg'
-                                                    type="password"
-                                                    defaultValue={this.state.pass}
-                                                    ref={this.inputPassword} />
-
-                                                <Form.Label>Nombre:</Form.Label>
-                                                <Form.Control size='lg'
-                                                    type="text"
-                                                    defaultValue={this.state.name}
-                                                    ref={this.inputNombre} />
-                                            </Form>
-                                            <br />
-                                            <div className="d-grid">
-                                                <Button size='lg' variant="primary" type="button" onClick={this.guardarCambios}>
-                                                    Guardar Cambios
-                                                </Button>
-                                            </div>
-                                        </Card.Body>
-                                    </Card>
-                                </CardGroup>
-                            </Col>
-                        </Row>
-                    </Container>
+                                <Card>
+                                    <Card.Body>
+                                        <Form>
+                                            <Form.Label>Nombre:</Form.Label>
+                                            <Form.Control size='lg'
+                                                type="text"
+                                                defaultValue={this.state.Usuario.nombre}
+                                                ref={this.inputNombre} />
+                                            <Form.Label>Apellidos:</Form.Label>
+                                            <Form.Control size='lg'
+                                                type="email"
+                                                defaultValue={this.state.Usuario.apellido}
+                                                ref={this.inputApellido} />
+                                            <Form.Label>Usuario:</Form.Label>
+                                            <Form.Control size='lg'
+                                                type="text"
+                                                defaultValue={this.state.Usuario.usuario}
+                                                ref={this.inputUsuario} />
+                                            <Form.Label>Contraseña:</Form.Label>
+                                            <Form.Control size='lg'
+                                                type="password"
+                                                defaultValue={this.state.Usuario.contra}
+                                                ref={this.inputContra} />
+                                            <Form.Label>Email:</Form.Label>
+                                            <Form.Control size='lg'
+                                                type="email"
+                                                defaultValue={this.state.Usuario.email}
+                                                ref={this.inputEmail} />
+                                            <Form.Label>Telefono:</Form.Label>
+                                            <Form.Control size='lg'
+                                                type="email"
+                                                defaultValue={this.state.Usuario.telefono}
+                                                ref={this.inputTelefono} />
+                                            <Form.Label>Direccion:</Form.Label>
+                                            <Form.Control size='lg'
+                                                type="email"
+                                                defaultValue={this.state.Usuario.direccion}
+                                                ref={this.inputDireccion} />
+                                        </Form>
+                                        <br />
+                                        <div className="d-grid">
+                                            <Button size='lg' variant="primary" type="button" onClick={() => { this.guardarCambios() }}>
+                                                Guardar Cambios
+                                            </Button>
+                                        </div>
+                                    </Card.Body>
+                                </Card>
+                            </CardGroup>
+                        </Col>
+                    </Row>
+                </Container>
             );
         }
     }

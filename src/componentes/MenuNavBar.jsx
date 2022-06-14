@@ -1,24 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar, Container, Nav, Offcanvas, NavDropdown, Image, Form, FormControl, Button } from 'react-bootstrap';
-import { Restaurantes } from '../data/Restaurantes';
 import uuid from 'react-uuid';
-import './StyleMenu.css';
 import perfil from '../img/perfil.png'
 import logo from '../img/logo.png'
+import { URL_BACK } from '../data/Constantes';
 
 class MenuNavBar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { restaurantes: [] };
+    this.state = { restaurantes: [], expand: false };
+
+    this.lista = [];
     this.inputSearch = React.createRef();
   }
 
-  inputHandler() {
+  buscar() {
     var lowerCase = this.inputSearch.current.value.toLowerCase();
     if (lowerCase !== '') {
-      var filtrado = Restaurantes.filter((e) => {
-        return e.name.toLowerCase().includes(lowerCase)
+      var filtrado = this.lista.filter((e) => {
+        return e.nombre.toLowerCase().includes(lowerCase)
       });
       this.setState({ restaurantes: filtrado });
     } else {
@@ -27,9 +28,15 @@ class MenuNavBar extends React.Component {
 
   };
 
+  async componentDidMount() {
+    let response = await fetch(URL_BACK + '/restaurante/listar');
+    let data = await response.json();
+    this.lista = data;
+  };
+
   render() {
     return (
-      <Navbar bg="light" variant="light" expand={false}>
+      <Navbar bg="light" variant="light" expand={this.state.expand} onToggle={() => { this.setState({ expand: !this.state.expand }) }}>
         <Container fluid>
           <Navbar.Brand as={Link} to="/inicio">
             <h1>
@@ -68,12 +75,12 @@ class MenuNavBar extends React.Component {
                     aria-label="Search"
                     ref={this.inputSearch}
                   />
-                  <Button variant="outline-primary" onClick={() => this.inputHandler()}>Search</Button>
+                  <Button variant="outline-primary" onClick={() => this.buscar()}>Search</Button>
                 </Form>
                 <br />
                 {this.state.restaurantes.map((item) => {
                   return <NavDropdown.Item key={uuid()} as={Link} to={"/restaurante/" + item.id}>
-                    {item.name}</NavDropdown.Item>
+                    {item.nombre}</NavDropdown.Item>
                 })}
               </Nav>
             </Offcanvas.Body>

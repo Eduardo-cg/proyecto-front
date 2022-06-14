@@ -40,7 +40,6 @@ class PagoInfoCarta extends React.Component {
     }
 
     changeEditar() {
-        console.log(this.state.editar)
         this.setState({ editar: !this.state.editar })
     }
 

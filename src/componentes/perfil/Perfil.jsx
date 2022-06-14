@@ -4,21 +4,31 @@ import { Container, Row, Button, Col, Tabs, Tab } from 'react-bootstrap';
 import PerfilCarta from "./PerfilCarta";
 import Pedidos from "./Pedidos";
 import PagoInfoCarta from "./PagoInfoCarta";
+import Administracion from "./Administracion";
 
 
 class Perfil extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { id: null };
+    this.state = { Usuario: null };
   }
 
   componentDidMount() {
-    this.setState({ id: localStorage.getItem('id') })
+    this.setState({ Usuario: JSON.parse(localStorage.getItem('user')) })
+  }
+
+  admin() {
+    if (this.state.Usuario !== null && this.state.Usuario.admin === true) {
+      return (
+        <Tab eventKey="admin" title="Admin">
+          <Administracion />
+        </Tab>
+      );
+    }
   }
 
   render() {
-    if (localStorage.getItem('id') !== 'null' && localStorage.getItem('id') !== null) {
-
+    if (this.state.Usuario !== null) {
       return (
         <Container fluid="md">
           <Row>
@@ -33,6 +43,7 @@ class Perfil extends React.Component {
                 <Tab eventKey="pedidos" title="Pedidos">
                   <Pedidos />
                 </Tab>
+                {this.admin()}
               </Tabs>
             </Col>
           </Row>

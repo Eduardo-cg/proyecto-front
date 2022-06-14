@@ -1,43 +1,34 @@
 import React from 'react';
-import { Container, Form, Button, Row, Col, FloatingLabel } from 'react-bootstrap';
-import { Usuarios } from '../../data/Usuarios';
+import { Container, Form, Button, Row, Col, FloatingLabel, Alert } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
+import { URL_BACK } from '../../data/Constantes';
 
 
 class Login extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { Usuario: null };
-        this.login = this.login.bind(this);
+        this.state = { Usuario: null, setShow: false };
         this.inputUser = React.createRef();
         this.inputPassword = React.createRef();
     }
 
+    async login() {
 
+        let response = await fetch(URL_BACK + '/usuario/login?pass=' + this.inputPassword.current.value + '&usuario=' + this.inputUser.current.value);
 
-
-    login() {
-
-        let e = false;
-
-        Usuarios.map((item) => {
-            if (item.user.match(this.inputUser.current.value) && item.pass.match(this.inputPassword.current.value)) {
-                e = true;
-                this.setState({ Usuario: item });
-            }
-        });
-        if (e !== true) {
-            alert('Usuario o contreña incorrectos.');
+        if (response.status === 200) {
+            let data = await response.json();
+            this.setState({ Usuario: data });
+            console.log(this.state.Usuario);
+        } else {
+            this.setState({ setShow: true })
         }
     }
 
 
     componentDidMount() {
-
-        if (localStorage.getItem('id') !== 'null' && localStorage.getItem('id') !== null) {
-            this.setState({
-                Usuario: Usuarios[localStorage.getItem('id')]
-            });
+        if (localStorage.getItem('user') !== null) {
+            this.setState({ Usuario: JSON.parse(localStorage.getItem('user')) });
         } else {
             this.setState({
                 Usuario: null
@@ -47,21 +38,26 @@ class Login extends React.Component {
 
     componentWillUnmount() {
         if (this.state.Usuario !== null) {
-            localStorage.setItem('id', this.state.Usuario.id);
-            localStorage.setItem('user', this.state.Usuario.user);
-            localStorage.setItem('pass', this.state.Usuario.pass);
-            localStorage.setItem('name', this.state.Usuario.name);
-            localStorage.setItem('email', this.state.Usuario.email);
+            localStorage.setItem('user', JSON.stringify(this.state.Usuario));
         } else {
-            localStorage.setItem('id', null);
-            localStorage.setItem('id', null);
             localStorage.setItem('user', null);
-            localStorage.setItem('pass', null);
-            localStorage.setItem('name', null);
-            localStorage.setItem('email', null);
         }
     }
 
+    alerta() {
+        return (
+            <Row>
+                <Col xs={12} md={8} lg={4} className="p-3 m-auto">
+                    <Alert show={this.state.setShow} variant="danger" onClose={() => this.setState({ setShow: false })} dismissible>
+                        <Alert.Heading>Error al iniciar sesión.</Alert.Heading>
+                        <p>
+                            Los datos no coinciden.
+                        </p>
+                    </Alert>
+                </Col>
+            </Row>
+        )
+    }
 
 
     render() {
@@ -70,9 +66,9 @@ class Login extends React.Component {
                 <Redirect to='/perfil' />
             );
         } else {
-
             return (
                 <Container fluid="md">
+                    {this.alerta()}
                     <Row>
                         <Col xs={12} md={8} lg={4} className="p-3 m-auto shadow rounded">
                             <Form>
@@ -90,7 +86,7 @@ class Login extends React.Component {
                                 </FloatingLabel>
                             </Form>
                             <div className="d-grid gap-2">
-                                <Button size='lg' variant="primary" type="button" onClick={this.login}>
+                                <Button size='lg' variant="primary" type="button" onClick={() => { this.login() }}>
                                     Iniciar Sesion
                                 </Button>
                             </div>

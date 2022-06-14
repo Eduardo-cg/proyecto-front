@@ -1,74 +1,82 @@
 import React from 'react';
 import { Container, Card, Image, Row, Col, Button, Accordion, Modal, Tabs, Tab } from 'react-bootstrap';
-import { Restaurantes } from '../../data/Restaurantes';
-import { ProductosEj } from '../../data/ProductoEJ';
 import { Link } from 'react-router-dom';
+import { URL_BACK } from '../../data/Constantes';
 
 
 class Restaurante extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            restaurante: Restaurantes[this.props.id],
+            Usuario: JSON.parse(localStorage.getItem('user')),
+            restaurante: [],
             productos: [],
             categorias: [],
         };
-        this.pedido = null;
+
+        this.pedido = {
+            id: 0,
+            idR: this.props.id,
+            precio: 0,
+            lineasPedidos: []
+        };;
         this.pedidos = null;
-        this.pedir = this.pedir.bind(this);
+    }
+
+    crearPedido() {
+        this.pedidos = JSON.parse(localStorage.getItem("pedidos"));
+        if (this.pedidos === null) {
+            this.pedidos = [];
+        } else {
+            this.pedidos.map((e, i) => {
+                if (e.idR === this.props.id) {
+                    this.pedido = this.pedidos[i];
+                    this.pedidos.splice(i, 1);
+                }
+            });
+        }
+    }
+
+    crearLinea(item) {
+
+        let linea = {
+            id: item.id,
+            nombre: item.nombre,
+            unidades: 1,
+            precio: item.precio
+        }
+
+        if (this.pedido.lineasPedidos.length === 0) {
+            this.pedido.lineasPedidos.push(linea);
+        } else {
+            this.pedido.lineasPedidos.map((l) => {
+                if (l.id === item.id) {
+                    l.unidades++;
+                } else {
+                    this.pedido.lineasPedidos.push(linea);
+                }
+            });
+        }
+        this.pedido.lineasPedidos.map((l) => {
+            this.pedido.precio += l.precio;
+        });
+
     }
 
     pedir = (item) => {
-        this.pedidos = JSON.parse(localStorage.getItem("pedidos"));
-        if (this.pedidos == null) {
-            this.pedidos = [];
-        };
-        if (this.pedido == null) {
-            this.pedido = {
-                id: 0,
-                idR: this.state.id,
-                fecha: '2000-02-01',
-                precio: '20',
-                lineas: []
-            };
-        };
-
-        if (this.pedido.lineas.length === 0) {
-            item.unidades = 1;
-            this.pedido.lineas.push(item);
-        } else {
-            if (this.pedido.lineas.includes(item)) {
-                this.pedido.lineas.map((linea) => {
-                    if (linea === item) {
-                        console.log(linea.unidades)
-                        linea.unidades++;
-                        console.log(linea)
-                        console.log(linea.unidades)
-                    }
-                });
-            } else {
-                item.unidades = 1;
-                this.pedido.lineas.push(item);
-            }
-        };
-
+        this.crearPedido();
+        this.crearLinea(item);
+        this.pedidos.push(this.pedido);
+        localStorage.setItem("pedidos", JSON.stringify(this.pedidos));
         this.setState({ setShow: true });
     }
 
-    componentWillUnmount() {
-        if (this.pedido != null) {
-            this.pedidos.push(this.pedido);
-            localStorage.setItem("pedidos", JSON.stringify(this.pedidos));
-        };
-    }
-
-    componentDidMount() {
-        var filtrado = ProductosEj.filter((e) => {
-            return e.idR == this.props.id
-        });
-
+    async componentDidMount() {
+        let response = await fetch(URL_BACK + '/restaurante/?id=' + this.props.id);
+        let data = await response.json();
+        this.setState({ restaurante: data });
         this.setState({
-            productos: filtrado,
+            productos: data.productos,
             categorias: ["Comida", "Bebida"]
         });
     }
@@ -84,11 +92,11 @@ class Restaurante extends React.Component {
                                 return (
                                     <Col>
                                         <Card>
-                                            <Card.Img variant="top" src={item.img} />
+                                            <Card.Img variant="top" src={item.imagen} />
                                             <Card.Body>
                                                 <Card.Title>{item.nombre}</Card.Title>
                                                 <Card.Text>
-                                                    {item.desc}
+                                                    {item.descripcion}
                                                 </Card.Text>
                                             </Card.Body>
                                             <Card.Footer>
@@ -133,11 +141,11 @@ class Restaurante extends React.Component {
                                     return (
                                         <Col>
                                             <Card>
-                                                <Card.Img variant="top" src={item.img} />
+                                                <Card.Img variant="top" src={item.imagen} />
                                                 <Card.Body>
                                                     <Card.Title>{item.nombre}</Card.Title>
                                                     <Card.Text>
-                                                        {item.desc}
+                                                        {item.descripcion}
                                                     </Card.Text>
                                                 </Card.Body>
                                                 <Card.Footer>
@@ -170,11 +178,12 @@ class Restaurante extends React.Component {
     render() {
         return (
             <Container fluid>
+
                 <h1>
                     <Image
-                        src={this.state.restaurante.img}
+                        src={this.state.restaurante.imagen}
                         height="100px">
-                    </Image>{this.state.restaurante.name}
+                    </Image>{this.state.restaurante.nombre}
                 </h1>
                 <Tabs defaultActiveKey="productos" id="uncontrolled-tab-example" className="mb-3">
                     <Tab eventKey="productos" title="Productos">
@@ -184,13 +193,13 @@ class Restaurante extends React.Component {
                     </Tab>
                     <Tab eventKey="info" title="Informacion">
                         <br />
-                        <p>{this.state.restaurante.desc}</p>
+                        <p>{this.state.restaurante.descripcion}</p>
                         <h6>Direccion: </h6>
                         <p>{this.state.restaurante.direccion}</p>
                         <h6>Horario: </h6>
                         <p>{this.state.restaurante.horario}</p>
                         <h6>Telefono: </h6>
-                        <p>{this.state.restaurante.tlf}</p>
+                        <p>{this.state.restaurante.telefono}</p>
                     </Tab>
                 </Tabs>
                 <br />
