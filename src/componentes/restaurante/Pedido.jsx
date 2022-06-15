@@ -81,15 +81,24 @@ class Pedido extends React.Component {
     }
 
     quitar(x, y) {
+        this.pedidos[x].precio = 0;
         if (this.pedidos[x].lineasPedidos[y].unidades === 1) {
             if (this.pedidos[x].lineasPedidos.length === 1) {
                 this.pedidos.splice(x, 1);
             } else {
                 this.pedidos[x].lineasPedidos.splice(y, 1);
+                this.pedidos[x].lineasPedidos.map((l) => {
+                    this.pedidos[x].precio += l.precio * l.unidades;
+                });
             }
         } else {
             this.pedidos[x].lineasPedidos[y].unidades--;
+            this.pedidos[x].lineasPedidos.map((l) => {
+                this.pedidos[x].precio += l.precio * l.unidades;
+            });
         }
+
+
 
         this.setState({ pe: this.pedidos });
         localStorage.setItem("pedidos", JSON.stringify(this.pedidos));

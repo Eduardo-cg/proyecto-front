@@ -49,7 +49,7 @@ class Pedidos extends React.Component {
                 </Row>
                 <Row>
                     <Col className="p-3 m-auto">
-                        <b>Id: {this.state.Pedido.id} Restaurante: {this.state.Pedido.idR} Fecha: {this.state.Pedido.fecha} Precio: {this.state.Pedido.precio}</b>
+                        <b>Id: {this.state.Pedido.id} Restaurante: {this.state.Pedido.idR} Fecha: {this.state.Pedido.fecha} Precio: {this.state.Pedido.precio}€</b>
                         <br />
                         <br />
                         <Table responsive striped bordered hover>
@@ -65,7 +65,7 @@ class Pedidos extends React.Component {
                                     return (
                                         <tr>
                                             <td>{item.producto.nombre}</td>
-                                            <td>{item.precio}</td>
+                                            <td>{item.precio} €</td>
                                             <td>{item.unidades}</td>
                                         </tr>
                                     );

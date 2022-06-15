@@ -51,8 +51,9 @@ class PerfilCarta extends React.Component {
         });
 
         if (response.ok) {
-            this.setState({ Usuario: u });
-            localStorage.setItem('user', u)
+            let data = await response.json();
+            localStorage.setItem('user', JSON.stringify(data))
+            this.setState({ Usuario: data });
         } else {
             this.setState({ setShow: true })
         }

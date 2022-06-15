@@ -49,23 +49,26 @@ class Restaurante extends React.Component {
         if (this.pedido.lineasPedidos.length === 0) {
             this.pedido.lineasPedidos.push(linea);
         } else {
+            let a = false;
             this.pedido.lineasPedidos.map((l) => {
-                if (l.id === item.id) {
+                if (l.id == item.id) {
                     l.unidades++;
-                } else {
-                    this.pedido.lineasPedidos.push(linea);
+                    a = true;
                 }
             });
+            if (!a) {
+                this.pedido.lineasPedidos.push(linea);
+            }
         }
-        this.pedido.lineasPedidos.map((l) => {
-            this.pedido.precio += l.precio;
-        });
-
     }
 
     pedir = (item) => {
         this.crearPedido();
         this.crearLinea(item);
+        this.pedido.precio = 0;
+        this.pedido.lineasPedidos.map((l) => {
+            this.pedido.precio += l.precio * l.unidades;
+        });
         this.pedidos.push(this.pedido);
         localStorage.setItem("pedidos", JSON.stringify(this.pedidos));
         this.setState({ setShow: true });

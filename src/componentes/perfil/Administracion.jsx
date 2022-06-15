@@ -6,7 +6,7 @@ import { URL_BACK } from '../../data/Constantes';
 class Administracion extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { Restaurantes: [], Restaurante: { productos: [] }, editar: false, setShow: false };
+        this.state = { Restaurantes: [], Restaurante: { id: null, productos: [] }, editar: false, editarRestaurante: false, setShow: false, causa: 0 };
 
         this.actualizar = this.actualizar.bind(this);
         this.lista = [];
@@ -18,6 +18,13 @@ class Administracion extends React.Component {
         this.precio = React.createRef();
         this.categoria = React.createRef();
         this.desc = React.createRef();
+
+        this.urlRestaurante = React.createRef();
+        this.nombreRestaurante = React.createRef();
+        this.dirRestaurante = React.createRef();
+        this.horarioRestaurante = React.createRef();
+        this.descRestaurante = React.createRef();
+        this.tfnoRestaurante = React.createRef();
 
     }
 
@@ -38,7 +45,10 @@ class Administracion extends React.Component {
         if (this.selectValue.current.value != 0) {
             let response = await fetch(URL_BACK + '/restaurante/?id=' + this.selectValue.current.value);
             let data = await response.json();
-            console.log(data);
+            this.setState({ Restaurante: data });
+        } else if (this.state.Restaurante.id !== null) {
+            let response = await fetch(URL_BACK + '/restaurante/?id=' + this.state.Restaurante.id);
+            let data = await response.json();
             this.setState({ Restaurante: data });
         }
     }
@@ -54,8 +64,24 @@ class Administracion extends React.Component {
         let response = await fetch(URL_BACK + '/producto/borrar/?id=' + id, {
             method: 'DELETE'
         });
-        let data = await response.json();
-        console.log(data);
+        if (response.ok) {
+            this.setState({ setShow: true, causa: 0 })
+            this.actualizar();
+        } else {
+            this.setState({ setShow: true, causa: 2 })
+        }
+    }
+
+    async quitarRestaurante(id) {
+        let response = await fetch(URL_BACK + '/restaurante/borrar/?id=' + id, {
+            method: 'DELETE'
+        });
+        if (response.ok) {
+            this.setState({ setShow: true, causa: 0, Restaurante: { id: null, productos: [] } })
+            this.componentDidMount();
+        } else {
+            this.setState({ setShow: true, causa: 2 })
+        }
     }
 
     async insertar() {
@@ -71,8 +97,6 @@ class Administracion extends React.Component {
                 categoria: this.categoria.current.value
             };
 
-            console.log(p);
-
             let response = await fetch(URL_BACK + '/producto/insertar/?idRestaurante=' + this.state.Restaurante.id, {
                 method: 'POST',
                 headers: {
@@ -83,8 +107,9 @@ class Administracion extends React.Component {
             });
 
             if (response.ok) {
-                let data = await response.json();
-                console.log(data);
+                this.setState({ setShow: true, causa: 0 })
+                this.setState({ editar: !this.state.editar });
+                this.actualizar();
             } else {
                 this.setState({ setShow: true, causa: 2 })
             }
@@ -93,52 +118,133 @@ class Administracion extends React.Component {
     }
 
     add() {
-        if (this.state.editar === false) {
-            return (
-                <Row>
-                    <center>
-                        <Button size='lg' variant="outline-primary" type="button" onClick={() => this.setState({ editar: !this.state.editar })} >
-                            Añadir
-                        </Button>
-                    </center>
-                </Row>
-            );
-        } else {
-            return (
-                <Row className="border rounded border-primary p-3">
-                    <Col className="p-2 m-auto" sm={12} md={6} lg={2}>
-                        <Form.Control type="url" placeholder="URL de la imagen" ref={this.url} />
-                    </Col>
-                    <Col className="p-2 m-auto" sm={12} md={6} lg={2}>
-                        <Form.Control type="text" placeholder="Nombre" ref={this.nombre} />
-                    </Col>
-                    <Col className="p-2 m-auto" sm={12} md={6} lg={2}>
-                        <Form.Control type="number" placeholder="Precio" ref={this.precio} />
-                    </Col>
-                    <Col className="p-2 m-auto" sm={12} md={6} lg={2}>
-                        <Form.Select ref={this.categoria}>
-                            <option key={uuid()} value={"Comida"}>Comida</option>
-                            <option key={uuid()} value={"Bebida"}>Bebida</option>
-                            <option key={uuid()} value={"Otro"}>Otro</option>
-                        </Form.Select>
-                    </Col>
-                    <Col className="p-2 m-auto" sm={12} lg={2}>
-                        <Form.Control as="textarea" rows={3} placeholder="Descripcion" ref={this.desc} />
-                    </Col>
-                    <Col className="p-2 m-auto d-grid gap-2" xs={6}>
-                        <Button variant="outline-secondary" onClick={() => this.insertar()}>
-                            Añadir
+        if (this.state.editarRestaurante === false) {
+            if (this.state.editar === false) {
+                return (
+                    <Col className="p-2 m-auto d-grid gap-2">
+                        <Button size='lg' disabled={this.state.Restaurante.id === null} variant="outline-primary" type="button" onClick={() => this.setState({ editar: !this.state.editar })} >
+                            Añadir producto
                         </Button>
                     </Col>
-                    <Col className="p-2 m-auto d-grid gap-2" xs={6}>
-                        <Button variant="outline-danger" onClick={() => this.setState({ editar: !this.state.editar })}>
-                            Cancelar
-                        </Button>
-                    </Col>
-                </Row>
-            );
-        }
+                );
+            } else {
+                return (
+                    <Row className="border rounded border-primary p-3">
+                        <Col className="p-2 m-auto" sm={12} md={6} lg={3}>
+                            <Form.Control type="url" placeholder="URL de la imagen" ref={this.url} />
+                        </Col>
+                        <Col className="p-2 m-auto" sm={12} md={6} lg={3}>
+                            <Form.Control type="text" placeholder="Nombre" ref={this.nombre} />
+                        </Col>
+                        <Col className="p-2 m-auto" sm={12} md={6} lg={3}>
+                            <Form.Control type="number" placeholder="Precio" ref={this.precio} />
+                        </Col>
+                        <Col className="p-2 m-auto" sm={12} md={6} lg={3}>
+                            <Form.Select ref={this.categoria}>
+                                <option key={uuid()} value={"Comida"}>Comida</option>
+                                <option key={uuid()} value={"Bebida"}>Bebida</option>
+                                <option key={uuid()} value={"Otro"}>Otro</option>
+                            </Form.Select>
+                        </Col>
+                        <Col className="p-2 m-auto" sm={12}>
+                            <Form.Control as="textarea" rows={3} placeholder="Descripcion" ref={this.desc} />
+                        </Col>
+                        <Col className="p-2 m-auto d-grid gap-2" xs={6}>
+                            <Button variant="outline-secondary" onClick={() => this.insertar()}>
+                                Añadir
+                            </Button>
+                        </Col>
+                        <Col className="p-2 m-auto d-grid gap-2" xs={6}>
+                            <Button variant="outline-danger" onClick={() => this.setState({ editar: !this.state.editar })}>
+                                Cancelar
+                            </Button>
+                        </Col>
+                    </Row>
+                );
+            };
+        };
 
+    }
+
+    async insertarRestaurante() {
+
+        if (this.nombreRestaurante.current.value === "" || this.dirRestaurante.current.value === "" || this.urlRestaurante.current.value === "" ||
+            this.descRestaurante.current.value === "" || this.horarioRestaurante.current.value === "" || this.tfnoRestaurante.current.value === "") {
+            this.setState({ setShow: true, causa: 1 })
+        } else {
+            let p = {
+                nombre: this.nombreRestaurante.current.value,
+                direccion: this.dirRestaurante.current.value,
+                imagen: this.urlRestaurante.current.value,
+                descripcion: this.descRestaurante.current.value,
+                telefono: this.tfnoRestaurante.current.value,
+                horario: this.horarioRestaurante.current.value
+            };
+            let response = await fetch(URL_BACK + '/restaurante/insertar', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(p)
+            });
+
+            if (response.ok) {
+                this.setState({ setShow: true, causa: 0 })
+                this.setState({ editarRestaurante: !this.state.editarRestaurante });
+                this.componentDidMount();
+            } else {
+                this.setState({ setShow: true, causa: 2 })
+            }
+
+        }
+    }
+
+    addRestaurante() {
+        if (this.state.editar === false) {
+            if (this.state.editarRestaurante === false) {
+                return (
+                    <Col className="p-2 m-auto d-grid gap-2">
+                        <Button size='lg' variant="outline-primary" type="button" onClick={() => this.setState({ editarRestaurante: !this.state.editarRestaurante })} >
+                            Añadir restaurante
+                        </Button>
+                    </Col>
+                );
+            } else {
+                return (
+                    <Row className="border rounded border-primary p-3">
+                        <Col className="p-2 m-auto" sm={12} md={6} lg={3}>
+                            <Form.Control type="url" placeholder="URL de la imagen" ref={this.urlRestaurante} />
+                        </Col>
+                        <Col className="p-2 m-auto" sm={12} md={6} lg={3}>
+                            <Form.Control type="text" placeholder="Nombre" ref={this.nombreRestaurante} />
+                        </Col>
+                        <Col className="p-2 m-auto" sm={12} md={6} lg={3}>
+                            <Form.Control type="text" placeholder="Telefono" ref={this.tfnoRestaurante} />
+                        </Col>
+                        <Col className="p-2 m-auto" sm={12} md={6} lg={3}>
+                            <Form.Control type="text" placeholder="Direccion" ref={this.dirRestaurante} />
+                        </Col>
+                        <Col className="p-2 m-auto" sm={12} lg={4}>
+                            <Form.Control as="textarea" rows={3} placeholder="Horario" ref={this.horarioRestaurante} />
+                        </Col>
+                        <Col className="p-2 m-auto" sm={12} lg={8}>
+                            <Form.Control as="textarea" rows={3} placeholder="Descripcion" ref={this.descRestaurante} />
+                        </Col>
+                        <Col className="p-2 m-auto d-grid gap-2" xs={6}>
+                            <Button variant="outline-secondary" onClick={() => this.insertarRestaurante()}>
+                                Añadir
+                            </Button>
+                        </Col>
+                        <Col className="p-2 m-auto d-grid gap-2" xs={6}>
+                            <Button variant="outline-danger" onClick={() => this.setState({ editarRestaurante: !this.state.editarRestaurante })}>
+                                Cancelar
+                            </Button>
+                        </Col>
+                    </Row>
+                );
+            };
+        };
     }
 
     textoError() {
@@ -146,7 +252,7 @@ class Administracion extends React.Component {
             case 1:
                 return 'Introduce todos los campos.';
             case 2:
-                return 'Error al crear el producto.';
+                return 'Error al insertar.';
             default:
                 return 'Error.';
         }
@@ -156,11 +262,23 @@ class Administracion extends React.Component {
         return (
             <Row>
                 <Col xs={12} className="p-3 m-auto">
-                    <Alert show={this.state.setShow} variant="danger" onClose={() => this.setState({ setShow: false })} dismissible>
+                    <Alert show={this.state.setShow && this.state.causa !== 0} variant="danger" onClose={() => this.setState({ setShow: false, causa: 0 })} dismissible>
                         <Alert.Heading>Error al crear usuario.</Alert.Heading>
                         <p>
                             {this.textoError()}
                         </p>
+                    </Alert>
+                </Col>
+            </Row>
+        )
+    }
+
+    alertainsertado() {
+        return (
+            <Row>
+                <Col xs={12} className="p-3 m-auto">
+                    <Alert show={this.state.setShow && this.state.causa === 0} variant="success" onClose={() => this.setState({ setShow: false })} dismissible>
+                        <Alert.Heading>Accion ejecutado corectamente</Alert.Heading>
                     </Alert>
                 </Col>
             </Row>
@@ -199,44 +317,60 @@ class Administracion extends React.Component {
                 </Row>
                 <Row>
                     <Col className="p-3 m-auto">
-                        <b>Restaurante: {this.state.Restaurante.id}</b>
+                        <b>Restaurante: {this.state.Restaurante.nombre}</b>
+                        &nbsp;
+                        &nbsp;
+                        <Button variant="outline-danger" disabled={this.state.Restaurante.id === null} onClick={() => this.quitarRestaurante(this.state.Restaurante.id)}>
+                            Quitar
+                        </Button>
                         <br />
-                        <br />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col className="p-3 m-auto">
                         {this.state.Restaurante.productos.map((item) => {
                             return (
-                                <Row className="border rounded border-primary p-3">
-                                    <Col xs={12} sm={3}>
-                                        <Image src={item.imagen} fluid />
-                                    </Col>
-                                    <Col className="p-2 m-auto" xs={12} sm={3}>
-                                        <Form.Control type="text" defaultValue={item.nombre} ref={this.inputNum} />
-                                    </Col>
-                                    <Col className="p-2 m-auto" xs={12} sm={3}>
-                                        <Form.Control type="number" defaultValue={item.precio} ref={this.inputNum} />
-                                    </Col>
-                                    <Col className="p-2 m-auto" xs={12} sm={3}>
-                                        <Form.Control as="textarea" rows={3} defaultValue={item.descripcion} ref={this.inputNum} />
-                                    </Col>
-                                    {/* 
+                                <div>
+                                    <Row className="border rounded border-primary p-3">
+                                        <Col xs={12} sm={3}>
+                                            <Image src={item.imagen} fluid />
+                                        </Col>
+                                        <Col className="p-2 m-auto" xs={12} sm={3}>
+                                            <Form.Control type="text" disabled={true} defaultValue={item.nombre} ref={this.inputNum} />
+                                        </Col>
+                                        <Col className="p-2 m-auto" xs={12} sm={3}>
+                                            <Form.Control type="number" disabled={true} defaultValue={item.precio} ref={this.inputNum} />
+                                        </Col>
+                                        <Col className="p-2 m-auto" xs={12} sm={3}>
+                                            <Form.Control as="textarea" rows={3} disabled={true} defaultValue={item.descripcion} ref={this.inputNum} />
+                                        </Col>
+                                        {/* 
                                     <Col className="p-2 m-auto d-grid gap-2" xs={12} sm={6} md={2}>
                                         <Button variant="outline-secondary" onClick={() => this.editar(item)}>
                                             Editar
                                         </Button>
                                     </Col>                            
                                     */}
-                                    <Col className="p-2 m-auto d-grid gap-2" xs={12}>
-                                        <Button variant="outline-danger" onClick={() => this.quitarProducto(item.id)}>
-                                            Quitar
-                                        </Button>
-                                    </Col>
-                                </Row>
+                                        <Col className="p-2 m-auto d-grid gap-2" xs={12}>
+                                            <Button variant="outline-danger" onClick={() => this.quitarProducto(item.id)}>
+                                                Quitar
+                                            </Button>
+                                        </Col>
+                                    </Row>
+                                    <br />
+                                </div>
                             );
                         })}
-
                     </Col>
                 </Row>
                 {this.alerta()}
-                {this.add()}
+                {this.alertainsertado()}
+                <Row>
+                    {this.add()}
+                    {this.addRestaurante()}
+                </Row>
+
+
             </Container>
         );
     }

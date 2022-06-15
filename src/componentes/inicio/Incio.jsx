@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Badge, Container, Image, Row, Col, Carousel, Card } from 'react-bootstrap';
-import { ProductosEj } from '../../data/ProductoEJ';
 import uuid from 'react-uuid';
 import { URL_BACK } from '../../data/Constantes';
 
@@ -57,7 +56,10 @@ class Inicio extends React.Component {
                             {this.state.destacados.map((item) => {
                                 return (
                                     <Carousel.Item key={uuid()} as={Link} to={"/restaurante/" + item.idR}>
-                                        <Image fluid src={item.imagen} key={uuid()} />
+                                        <center>
+                                            <Image fluid src={item.imagen} key={uuid()} />
+                                        </center>
+
                                         <Carousel.Caption>
                                             <h3><Badge bg="primary" text="light">{item.nombre} - {item.precio}€</Badge></h3>
                                             <h5><Badge bg="secondary">{item.desc}</Badge></h5>

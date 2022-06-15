@@ -7,7 +7,7 @@ import { URL_BACK } from '../../data/Constantes';
 class Registro extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { Usuario: null, setShow: false};
+        this.state = { Usuario: null, setShow: false };
 
         this.inputNombre = React.createRef();
         this.inputApellido = React.createRef();
@@ -48,8 +48,9 @@ class Registro extends React.Component {
                 body: JSON.stringify(u)
             });
             if (response.ok) {
-                localStorage.setItem('user', JSON.stringify(u))
-                this.setState({ Usuario: u });
+                let data = await response.json();
+                localStorage.setItem('user', JSON.stringify(data))
+                this.setState({ Usuario: data });
             } else {
                 this.setState({ setShow: true, causa: 3 })
             }
