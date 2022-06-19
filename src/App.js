@@ -1,6 +1,6 @@
 import './App.css';
 import React from "react";
-import { Switch, BrowserRouter as Router, Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import uuid from 'react-uuid';
 import MenuNavBar from "./componentes/MenuNavBar";
 import Inicio from "./componentes/inicio/Incio";
@@ -13,7 +13,7 @@ import NotFound from './componentes/inicio/NotFound';
 
 function App() {
   return (
-    <Router>
+    <div>
       <header>
         <MenuNavBar />
       </header>
@@ -30,7 +30,8 @@ function App() {
         </Switch>
         <br />
       </div>
-    </Router>
+    </div>
+
   );
 }
 

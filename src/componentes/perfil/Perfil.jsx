@@ -37,9 +37,6 @@ class Perfil extends React.Component {
                 <Tab eventKey="info" title="Informacion Personal">
                   <PerfilCarta />
                 </Tab>
-                <Tab eventKey="infopagos" title="Informacion Pagos">
-                  <PagoInfoCarta />
-                </Tab>
                 <Tab eventKey="pedidos" title="Pedidos">
                   <Pedidos />
                 </Tab>
