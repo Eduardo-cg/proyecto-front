@@ -29,7 +29,7 @@ class Inicio extends React.Component {
 
     productosDestacados() {
         return (
-            <Row xs={3} className="p-3 m-auto shadow rounded">
+            <Row xs={2} lg={4} className="p-3 m-auto shadow rounded">
                 {this.state.destacados.map((item) => {
                     console.log(item);
                     return (
@@ -75,7 +75,7 @@ class Inicio extends React.Component {
                 {this.productosDestacados()}
                 <br />
                 <h1>Todos los Restaurantes:</h1>
-                <Row xs={4} className="p-3 m-auto shadow rounded">
+                <Row xs={2} lg={4} className="p-3 m-auto shadow rounded">
                     {this.state.restaurantes.map((item) => {
                         return <Col as={Link} to={"/restaurante/" + item.id}>
                             <Image fluid src={item.imagen} key={uuid()} />
